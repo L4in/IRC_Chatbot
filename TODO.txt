@@ -1,0 +1,4 @@
+TODO :
+	- personnaliser les messages à envoyer à l'utilisateur (IRCBot.c)
+	- faire la fonction de sauvegarde de log (IRCBot.c)
+	- 
