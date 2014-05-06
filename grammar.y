@@ -58,6 +58,7 @@ char *s;
 
 main()
 {
+    printf("NICK Lainbot\nUSER Lainbot 8 x : Battlestar\nJOIN #test");
     do
     {
     yyparse();

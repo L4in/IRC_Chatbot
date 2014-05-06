@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <arpa/inet.h>
+#include "adressresolver.h"
 
 int sockfd = 0;
 
@@ -29,7 +30,7 @@ int main() {
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(6667);
-    serv_addr.sin_addr.s_addr = inet_addr("192.168.1.22");
+    serv_addr.sin_addr.s_addr = inet_addr(hostname_to_ip("home.inner-universe.fr")); //Cette ligne est problématique
 
     if(connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
