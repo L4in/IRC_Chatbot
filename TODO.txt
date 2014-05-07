@@ -1,4 +1,6 @@
 TODO :
-	- personnaliser les messages à envoyer à l'utilisateur (IRCBot.c)
 	- faire la fonction de sauvegarde de log (IRCBot.c)
-	- 
+	- Créer une librairie de fonctions comprenant les fonctions suivantes :
+        - Fonction netprint prenant en argument un chaîne de caractère, envoyant ladite chaîne de caractère sur le socket ouvert
+        - Fonction permettant de générer une chaîne de caractère de type "message", prenant en argument un type de message à générer
+
