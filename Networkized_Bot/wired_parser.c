@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -11,7 +12,7 @@
 #include "adressresolver.h"
 
 int sockfd = 0;
-
+extern char* username;
 
 //int yyparse();
 int readInputForLexer( char *buffer, int *numBytesRead, int maxBytesToRead );
@@ -20,6 +21,8 @@ static int globalReadOffset;
 //static const char *globalInputText = "3+4";
 
 int main() {
+
+    srand(time(null));
 
     struct sockaddr_in serv_addr;
     if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -44,7 +47,6 @@ int main() {
 
     while(1)
     {
-        //globalReadOffset = 0;
         yyparse();
 
     }
@@ -58,24 +60,48 @@ int readInputForLexer( char *buffer, int *numBytesRead, int maxBytesToRead ) {
     memset(wireBuff, '\0', sizeof(wireBuff));
     read(sockfd, wireBuff, sizeof(wireBuff));
 
-    //printf("WireBuff contient %s\n", wireBuff);
     globalInputText = strdup(wireBuff);
 
     int numBytesToRead = maxBytesToRead;
-    //printf("\tNombre de bytes à lire placé au maiximum, soit %d.\n", numBytesToRead);
-    int bytesRemaining = strlen(globalInputText);//-globalReadOffset;
-    //printf("Nombre de bytes restant à lire : %d\n", bytesRemaining);
+    int bytesRemaining = strlen(globalInputText);
     int i;
-    if ( numBytesToRead > bytesRemaining ) { numBytesToRead = bytesRemaining; /*printf("On a plus de bytes à lire que de bytes restant, on place le nombre de bytes restant comme limite.\n");*/}
+    if ( numBytesToRead > bytesRemaining ) { numBytesToRead = bytesRemaining; }
     for ( i = 0; i < numBytesToRead; i++ ) {
-        buffer[i] = globalInputText[/*globalReadOffset+*/i];
-        //printf("Byte %c placé en position %d du buffer.\n", globalInputText[/*globalReadOffset+*/i], i);
+        buffer[i] = globalInputText[i];
     }
-    //printf("Et on sort de la boucle.\n");
     *numBytesRead = numBytesToRead;
-    //printf("Si je ne m'affiche pas, le problème ne vient pas de là où je pense.\n");
-//    globalReadOffset += numBytesToRead;
-    //printf("Au final, j'ai dans mon buffer \"%s\", soit %d caractères sur les %d maximum.\n", buffer, *numBytesRead, maxBytesToRead);
     printf("%s", buffer);
     return 0;
+}
+
+void netprint(char* message)
+{
+    write(sockfd, message, sizeof(message));
+}
+
+void reply_greetings()
+{
+    char* message;
+    switch(rand() % 5)
+    {
+        case 0:
+            sprintf(message, "Hello, %s! How are you doing?\n", username);
+            break;
+
+        case 1:
+            sprintf(message, "%s : Hi.\n", username);
+            break;
+
+        case 2:
+            sprintf(message, "%s : Greetings!\n", username);
+            break;
+
+        case 3:
+            sprinf(message, "Ahoy, %d.\n", username);
+            break;
+
+        case 4:
+            sprintf(message, "Welcome, %s.\n", username);
+            break;
+    }
 }
