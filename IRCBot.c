@@ -53,6 +53,13 @@ void getTime(int size, char format[], time_t timeInit, struct tm date) {
 	timeToDoSomething(date.tm_hour);
 }
 
+/***
+ * 
+***/
+void writeLog()  {
+
+}
+
 int main() {
 	char format[128] = {0};
 	time_t timeInit = NULL;
