@@ -3,4 +3,6 @@ TODO :
 	- Créer une librairie de fonctions comprenant les fonctions suivantes :
         - Fonction netprint prenant en argument un chaîne de caractère, envoyant ladite chaîne de caractère sur le socket ouvert
         - Fonction permettant de générer une chaîne de caractère de type "message", prenant en argument un type de message à générer
+	- Makefile pour la version terminal
+	- Makefile général avec options pour choisir la version
 
