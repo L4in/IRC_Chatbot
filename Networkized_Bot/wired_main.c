@@ -13,16 +13,17 @@
 
 int sockfd = 0;
 extern char* username;
-
+char* channel;
 //int yyparse();
 int readInputForLexer( char *buffer, int *numBytesRead, int maxBytesToRead );
 
 static int globalReadOffset;
 //static const char *globalInputText = "3+4";
 
+
 int main() {
 
-    srand(time(null));
+    srand(time(NULL));
 
     struct sockaddr_in serv_addr;
     if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -33,7 +34,7 @@ int main() {
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(6667);
-    serv_addr.sin_addr.s_addr = inet_addr(hostname_to_ip("home.inner-universe.fr")); //Cette ligne est problématique
+    serv_addr.sin_addr.s_addr = inet_addr(/*hostname_to_ip("")*/"192.168.1.22"); //Cette ligne est problématique
 
     if(connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
@@ -74,14 +75,17 @@ int readInputForLexer( char *buffer, int *numBytesRead, int maxBytesToRead ) {
     return 0;
 }
 
-void netprint(char* message)
+void netprint(char* in_mess)
 {
-    write(sockfd, message, sizeof(message));
+    char message[200];
+    sprintf(message, "PRIVMSG %s :%s\n", channel, in_mess);
+    in_mess = strdup(message);
+    write(sockfd, in_mess, strlen(in_mess));
 }
 
 void reply_greetings()
 {
-    char* message;
+    char message[100];
     switch(rand() % 5)
     {
         case 0:
@@ -97,11 +101,14 @@ void reply_greetings()
             break;
 
         case 3:
-            sprinf(message, "Ahoy, %d.\n", username);
+            sprintf(message, "Ahoy, %s.\n", username);
             break;
 
         case 4:
             sprintf(message, "Welcome, %s.\n", username);
             break;
     }
+
+    char* out = strdup(message);
+    netprint(out);
 }
