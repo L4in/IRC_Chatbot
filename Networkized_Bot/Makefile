@@ -1,25 +1,75 @@
-all: chatbot
+# Networkized_Bot/Makefile
+#.SUFFIXES:
+#.PHONY:
 
-chatbot: wired_main.o y.tab.o lex.yy.o adressresolver.o
-	gcc wired_main.o y.tab.o lex.yy.o adressresolver.o -o chatbot
+#
+CC 		= 	gcc
+DEBUG 		= 	yes
+#OBJ 		=	wired_main.o adressresolver.o lex.yy.o	
+OUTPUT		=	networkizedChatbot
 
-y.tab.o: y.tab.c
-	gcc -c y.tab.c
+# Choice debug or release mode
+ifeq ($(DEBUG),yes)
+        CFLAGS 	= 	-g -W -Wall
+else
+        CFLAGS 	=	-W
+endif
 
-lex.yy.o: lex.yy.c
-	gcc -c lex.yy.c
+# Path list
+CURDIR		=	./
+BINDIR		=	bin/
+INCDIR		=	inc/
+SRCDIR		=	src/
+OBJDIR		=	obj/
 
-lex.yy.c: wired_lexer.l y.tab.h
-	lex wired_lexer.l
+# Source and object files list
+#SRC		=	$(addprefix $(SRCBDIR), $(CHOICE).cpp) $(addprefix $(SRCLDIR), libImageManip.cpp) $(addprefix $(SRCLDIR), grayScale.cpp) $(addprefix $(SRCLDIR), sobelFilter.cpp) $(addprefix $(SRCLDIR), interestPoint.cpp) $(addprefix $(SRCLDIR), harrisMap.cpp)
+#OBJB		=	$(patsubst $(SRCBDIR)$(CHOICE).cpp,$(OBJDIR)$(CHOICE).o,$(SRC))
+#OBJL		=	$(patsubst $(SRCLDIR)%.cpp,$(OBJDIR)%.o,$(SRC))
 
-y.tab.c y.tab.h: wired_parser.y wired_main.h 
-	yacc -d wired_parser.y
+
+
+# All 
+all: clean $(BINDIR)$(OUTPUT)
+#all: clean $(OBJDIR)$(OBJ) 
+#all: clean chatbot
+
+ifeq ($(DEBUG),yes)
+	@echo "Debug compilation"
+else
+	@echo "Release compilation"
+endif
+
+
+$(BINDIR)$(OUTPUT): wired_main.o adressresolver.o y.tab.o lex.yy.o 
+	$(CC) wired_main.o y.tab.o lex.yy.o adressresolver.o -o chatbot
+
+wired_main.o:  wired_main.c adressresolver.h
+	$(CC) -c wired_main.c -o wired_main.o 
 
 adressresolver.o: adressresolver.c adressresolver.h
-	gcc -c adressresolver.c
+	$(CC) -c adressresolver.c -o adressresolver.o
 
-wired_main.o:  wired_main.c adressresolver.h wired_main.h
-	gcc -c wired_main.c
+y.tab.o: y.tab.c
+	$(CC) -c y.tab.c -o y.tab.o
 
+lex.yy.o: lex.yy.c
+	$(CC) -c lex.yy.c -o lex.yy.o
+
+y.tab.c: wired_parser.y 
+	yacc -d wired_parser.y
+
+lex.yy.c: wired_lexer.l
+	lex wired_lexer.l
+
+
+
+
+ 
 clean:
-	rm *.o
+	rm -rf *.o
+
+
+
+
+
