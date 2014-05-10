@@ -64,6 +64,6 @@ statment  : greetings   {reply_greetings();}
           | date_       {char time[100]; getTime(time); char sentence[200]; sprintf(sentence, "My internal clock display %s\n", time); netprint(sentence);}
           | disconnect   {irc_disconnect();}
           | error NEWLINE {yyerrok;}
-          | stop_dump   {endDump();}
+          | stop_dump   {endDump(); netprint("I'm not saving the conversation anymore.\n"}
           ;
 %%

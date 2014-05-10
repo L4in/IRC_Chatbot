@@ -154,11 +154,17 @@ void irc_disconnect()
 void list_help()
 {
     netprint("I, Lain, am a experimental bot using pattern recognition in order to understand and execute orders. I'm not in final state, and I hope I'll be able to help you when finished.");
+    usleep(5000);
     netprint("I'll be concieved to handle operating tasks, banning annoying people, and all that will be programmed into me.");
+    usleep(5000);
     netprint("I respond to greetings in may different forms, even if I may miss some of them. I'm still learning.");
+    usleep(5000);
     netprint("I respond to insults, not only those directed against me.");
+    usleep(5000);
     netprint("More interesting, I'm able to save the conversation into a file. The syntax for this is save|load|monitor(ing)?|dump. I'll create files myself.");
+    usleep(5000);
     netprint("In case you're living in a cave, I can too display the current time in my timezone.");
+    usleep(500);
 }
 
 void getTime(char time_now[100])
