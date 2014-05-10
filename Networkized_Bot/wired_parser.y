@@ -56,14 +56,13 @@ disconnect : request LEAVE
 stop_dump : NOM STOPDUMP
           | STOPDUMP NOM
           | request STOPDUMP
-          | STOPDUMP request
           ;
 
 
 statment  : greetings   {reply_greetings();}
-          | conv_dump   {netprint("The save is running..."); startDump();}
+          | conv_dump   {netprint("The save is running...\n"); startDump();}
           | list_help   {printf("LIST_HELP\n\n"); list_help();}
-          | date_       {send(sockfd, "PRIVMSG #test :Date request recieved.\n", sizeof("PRIVMSG #test :Date request recieved.\n")-1);}
+          | date_       {char time[100]; getTime(time); char sentence[200]; sprintf(sentence, "My internal clock display %s\n", time); netprint(sentence);}
           | disconnect   {irc_disconnect();}
           | error NEWLINE {yyerrok;}
           | stop_dump   {endDump();}

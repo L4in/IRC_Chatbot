@@ -33,10 +33,12 @@ extern YYSTYPE yylval;
 
 <MESSCONTENT>([Ll]eave|[Qq]uit|[Dd]isconnect)/[ ,?;.:/!()\t\n]*        {printf("LEAVE token.\n"); return LEAVE;}
 
-<MESSCONTENT>[cC]ould|[cC]an|[wW]ill|[wW]ould|[mM]ay|[sS]hould|[Nn]eed|[Ww]ant|[Gg]ive|[Nn]ow|[Pp]lease-[?]    {printf("Token DEMANDE grepp'd.\n");
+<MESSCONTENT>[cC]ould|[cC]an|[wW]ill|[wW]ould|[mM]ay|[sS]hould|[Nn]eed|[Ww]ant|[Gg]ive|[Nn]ow|[Pp]lease|[?]    {printf("Token DEMANDE grepp'd.\n");
                         return DEMANDE;}
 
-<MESSCONTENT>(([Ss]top|[Cc]ease|[Tt]erminate)(([Ss]av(e)?|[Ll]oad|[Mm]onitor|[Rr]egister|[Cc]opy|[Dd]ump)(ing)?)) {return STOPDUMP;}
+<MESSCONTENT>[Tt]ime|[Hh]our {printf("Token TIME grepp'd.\n"); return TIME;}
+
+<MESSCONTENT>(([Ss]top|[Cc]ease|[Tt]erminate)[ ](([Ss]av(e)?|[Ll]oad|[Mm]onitor|[Rr]egister|[Cc]opy|[Dd]ump)(ing)?)) {return STOPDUMP;}
 
 <MESSCONTENT>[fF]uck|[cC]unt|[bB]rat|[jJ]erk|[fF]ag|[fF]aggot|[mM]oron|[wW]anker|[aA]rsehole|[aA]sshole|[fF]ucker|[sS]crubber|[sS]lag|[kK]nob|[wW]azzock|[tT]wit|[mM]inebag|[mM]aggot    {char sentence[50]; sprintf(sentence, "Stop insulting people, %s.\n", username); netprint(sentence); }
 

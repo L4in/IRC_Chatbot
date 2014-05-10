@@ -159,7 +159,8 @@ void irc_disconnect()
     netprint("Instruction to leave recieved, immediate execution.\n");
     write(sockfd, "QUIT Quit_Command_Recieved\n", sizeof("QUIT Quit_Command_Recieved\n")-1);
     close(sockfd);
-    fclose(saveFile);
+    if(saveFile)
+        fclose(saveFile);
     exit (0);
 }
 
@@ -205,5 +206,8 @@ void endDump()
 {
     dumpActivated = 0;
 
+    if(saveFile)
     fclose(saveFile);
+
+    printf("Fin d'enregistrement.");
 }
