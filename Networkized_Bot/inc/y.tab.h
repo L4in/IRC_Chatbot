@@ -52,7 +52,8 @@ extern int yydebug;
     HELP = 262,
     TIME = 263,
     LEAVE = 264,
-    NEWLINE = 265
+    STOPDUMP = 265,
+    NEWLINE = 266
   };
 #endif
 /* Tokens.  */
@@ -63,7 +64,8 @@ extern int yydebug;
 #define HELP 262
 #define TIME 263
 #define LEAVE 264
-#define NEWLINE 265
+#define STOPDUMP 265
+#define NEWLINE 266
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
