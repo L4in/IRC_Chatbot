@@ -13,7 +13,7 @@ extern int yylex();
 extern int readInputForLexer(char* buffer,int *numBytesRead,int maxBytesToRead);
 %}
 
-%token NOM DEMANDE GREET DUMP HELP TIME LEAVE
+%token NOM DEMANDE GREET DUMP HELP TIME LEAVE STOPDUMP
 %token NEWLINE
 %%
 
@@ -53,13 +53,20 @@ disconnect : request LEAVE
            | DEMANDE LEAVE NOM
            ;
 
+stop_dump : NOM STOPDUMP
+          | STOPDUMP NOM
+          | request STOPDUMP
+          | STOPDUMP request
+          ;
+
 
 statment  : greetings   {reply_greetings();}
           | conv_dump   {netprint("The save is running..."); startDump();}
           | list_help   {printf("LIST_HELP\n\n"); list_help();}
           | date_       {send(sockfd, "PRIVMSG #test :Date request recieved.\n", sizeof("PRIVMSG #test :Date request recieved.\n")-1);}
-          |disconnect   {irc_disconnect();}
-          |error NEWLINE {yyerrok;}
+          | disconnect   {irc_disconnect();}
+          | error NEWLINE {yyerrok;}
+          | stop_dump   {endDump();}
           ;
 
 %%
