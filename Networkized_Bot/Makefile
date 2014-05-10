@@ -49,10 +49,10 @@ $(OBJDIR)lex.yy.o: $(SRCDIR)lex.yy.c
 	$(CC) -c $(SRCDIR)lex.yy.c -o $(OBJDIR)lex.yy.o
 
 $(SRCDIR)lex.yy.c: $(SRCDIR)wired_lexer.l
-	$(LEX) $(SRCDIR)wired_lexer.l
+	$(LEX) $(SRCDIR)wired_lexer.l & mv lex.yy.c src/lex.yy.c
 
 $(SRCDIR)y.tab.c $(INCDIR)y.tab.h : $(SRCDIR)wired_parser.y $(INCDIR)wired_main.h 
-	$(YACC) -d $(SRCDIR)wired_parser.y
+	$(YACC) -d $(SRCDIR)wired_parser.y & mv y.tab.c src/y.tab.c & mv y.tab.h inc/y.tab.h
 
 $(OBJDIR)adressresolver.o: $(SRCDIR)adressresolver.c $(INCDIR)adressresolver.h
 	$(CC) -c $(SRCDIR)adressresolver.c -o $(OBJDIR)adressresolver.o
