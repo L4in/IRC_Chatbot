@@ -58,6 +58,7 @@ void getTime(int size, char format[], time_t timeInit, struct tm date) {
 ***/
 void writeLog()  {
 
+
 }
 
 int main() {

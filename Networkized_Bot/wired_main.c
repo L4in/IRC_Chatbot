@@ -145,3 +145,18 @@ void reply_greetings()
     char* out = strdup(message);
     netprint(out);
 }
+
+int irc_disconnect()
+{
+    netprint("Instruction to leave recieved, immediate execution.\n");
+    write(sockfd, "QUIT Quit_Command_Recieved\n", sizeof("QUIT Quit_Command_Recieved\n")-1);
+    close(sockfd);
+    exit (0);
+}
+
+int list_help()
+{
+    printf("\n\nWAKE UP LAIN\n");
+    netprint("I, Lain, am a experimental bot using pattern recognition in order to understand and execute orders. I'm not in final state, and I hope I'll be able to help you when finished.");
+    netprint("I'll be concieved to handle operating tasks, banning annoying people, and all that will be programmed into me.");
+}
