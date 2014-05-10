@@ -28,20 +28,19 @@ extern YYSTYPE yylval;
 
 <MESSCONTENT>([Hh]elp|[Cc]ommand|[Ll]ist)/[ ,?;.:/!\t\n()]+    {printf("HELP Token.\n"); return HELP;}
 
-<MESSCONTENT>[sS]ave|[lL]oad|[mM]onitor(ing)?|[rR]egister|[cC]opy       {printf("Token DUMP grepp'd.\n");
+<MESSCONTENT>[sS]ave|[lL]oad|[mM]onitor(ing)?|[rR]egister|[cC]opy|[Dd]ump       {printf("Token DUMP grepp'd.\n");
                         return DUMP;}
 
 <MESSCONTENT>([Ll]eave|[Qq]uit|[Dd]isconnect)/[ ,?;.:/!()\t\n]*        {printf("LEAVE token.\n"); return LEAVE;}
 
-<MESSCONTENT>[cC]ould|[cC]an|[wW]ill|[wW]ould|[mM]ay|[sS]hould|[Nn]eed|[Ww]ant|[Gg]ive|[Nn]ow|[?]    {printf("Token DEMANDE grepp'd.\n");
+<MESSCONTENT>[cC]ould|[cC]an|[wW]ill|[wW]ould|[mM]ay|[sS]hould|[Nn]eed|[Ww]ant|[Gg]ive|[Nn]ow|[Pp]lease-[?]    {printf("Token DEMANDE grepp'd.\n");
                         return DEMANDE;}
 
 <MESSCONTENT>[fF]uck|[cC]unt|[bB]rat|[jJ]erk|[fF]ag|[fF]aggot|[mM]oron|[wW]anker|[aA]rsehole|[aA]sshole|[fF]ucker|[sS]crubber|[sS]lag|[kK]nob|[wW]azzock|[tT]wit|[mM]inebag|[mM]aggot    {char sentence[50]; sprintf(sentence, "Stop insulting people, %s.\n", username); netprint(sentence); }
 
 ^:                      {BEGIN HEADER;}
 
-<HEADER>[a-zA-Z0-9_-]+/[!]   {username = strdup(yytext);
-                                printf("Name %s GET\n", username);}
+<HEADER>[a-zA-Z0-9_-]+/[!]   {username = strdup(yytext);}
 
 <HEADER>([#]+[a-zA-Z]+)/[ ]           {BEGIN MESSCONTENT;
                                         channel = strdup(yytext);

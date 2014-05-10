@@ -9,11 +9,15 @@
 #include <unistd.h>
 #include <errno.h>
 #include <arpa/inet.h>
+#include <string.h>
+#include <time.h>
 #include "adressresolver.h"
 
 int sockfd = 0;
 extern char* username;
 char* channel;
+int dumpActivated = 0;
+FILE *saveFile = NULL;
 //int readInputForLexer( char *buffer, int *numBytesRead, int maxBytesToRead );
 
 
@@ -42,7 +46,7 @@ int main(int argc, char** argv) {
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(port);
- 
+
     if(type == 'i')
     {
         printf("Enter the IP adress.\n");
@@ -104,15 +108,19 @@ int readInputForLexer( char *buffer, int *numBytesRead, int maxBytesToRead ) {
         buffer[i] = globalInputText[i];
     }
     *numBytesRead = numBytesToRead;
-    printf("%s", buffer);
+
+    if(dumpActivated)
+        fprintf(saveFile, "%.*s\n", *numBytesRead-1, buffer);
     return 0;
 }
 
 void netprint(char* in_mess)
 {
     char message[200];
-    sprintf(message, "PRIVMSG %s :%s\n", channel, in_mess);
+    sprintf(message, "PRIVMSG %s :%s", channel, in_mess);
     in_mess = strdup(message);
+    if (dumpActivated)
+        fprintf(saveFile, "%s", in_mess);
     write(sockfd, in_mess, strlen(in_mess));
 }
 
@@ -146,15 +154,16 @@ void reply_greetings()
     netprint(out);
 }
 
-int irc_disconnect()
+void irc_disconnect()
 {
     netprint("Instruction to leave recieved, immediate execution.\n");
     write(sockfd, "QUIT Quit_Command_Recieved\n", sizeof("QUIT Quit_Command_Recieved\n")-1);
     close(sockfd);
+    fclose(saveFile);
     exit (0);
 }
 
-int list_help()
+void list_help()
 {
     netprint("I, Lain, am a experimental bot using pattern recognition in order to understand and execute orders. I'm not in final state, and I hope I'll be able to help you when finished.");
     netprint("I'll be concieved to handle operating tasks, banning annoying people, and all that will be programmed into me.");
@@ -162,4 +171,39 @@ int list_help()
     netprint("I respond to insults, not only those directed against me.");
     netprint("More interesting, I'm able to save the conversation into a file. The syntax for this is save|load|monitor(ing)?|dump. I'll create files myself.");
     netprint("In case you're living in a cave, I can too display the current time in my timezone.");
+}
+
+void getTime(char time_now[100])
+{
+    time_t now;
+    time(&now);
+
+    sprintf(time_now, "%s", ctime(&now));
+}
+
+
+void startDump()
+{
+    saveFile = fopen("Lainbot-conversation-dump", "a");
+    if (saveFile == NULL)
+    {
+        netprint("I was not able to open the file. The operation coule not complete.\n");
+        return;
+    }
+
+    char time[100];
+
+    getTime(time);
+    
+    fprintf(saveFile, "\n\n\tBeginning save at %s.\n", time);
+
+    dumpActivated = 1;
+
+}
+
+void endDump()
+{
+    dumpActivated = 0;
+
+    fclose(saveFile);
 }

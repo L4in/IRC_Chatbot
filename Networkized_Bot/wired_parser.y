@@ -55,7 +55,7 @@ disconnect : request LEAVE
 
 
 statment  : greetings   {reply_greetings();}
-          | conv_dump   {printf("\t\tSockfd = %d\n\n", sockfd); send(sockfd, "PRIVMSG #test :Dump request recieved.\n", sizeof("PRIVMSG #test :Dump request recieved.\n")-1); printf("DUMP\n");}
+          | conv_dump   {netprint("The save is running..."); startDump();}
           | list_help   {printf("LIST_HELP\n\n"); list_help();}
           | date_       {send(sockfd, "PRIVMSG #test :Date request recieved.\n", sizeof("PRIVMSG #test :Date request recieved.\n")-1);}
           |disconnect   {irc_disconnect();}
