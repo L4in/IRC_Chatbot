@@ -14,14 +14,17 @@
 int sockfd = 0;
 extern char* username;
 char* channel;
-//int yyparse();
 int readInputForLexer( char *buffer, int *numBytesRead, int maxBytesToRead );
 
-static int globalReadOffset;
-//static const char *globalInputText = "3+4";
 
 
-int main() {
+int main(int argc, char** argv) {
+
+    char type;
+    char hostname_or_adress[40];
+
+    printf("Enter i for specifying a IP adress, enter h for a hostname to connect :\n");
+    scanf("%c", &type);
 
     srand(time(NULL));
 
@@ -32,9 +35,37 @@ int main() {
         return 1;
     }
 
+    int port;
+    printf("Enter the port.\n");
+    scanf("%d", &port);
+
+
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(6667);
-    serv_addr.sin_addr.s_addr = inet_addr(/*hostname_to_ip("")*/"192.168.1.22"); //Cette ligne est problématique
+    serv_addr.sin_port = htons(port);
+ 
+    if(type == 'i')
+    {
+        printf("Enter the IP adress.\n");
+        scanf("%s", hostname_or_adress);
+        serv_addr.sin_addr.s_addr = inet_addr(hostname_or_adress);
+    }
+    else if (type == 'h')
+    {
+        printf("Enter the hostname.\n");
+        scanf("%s", hostname_or_adress);
+        serv_addr.sin_addr.s_addr = inet_addr(hostname_to_ip(hostname_or_adress));
+    }
+    else 
+    {
+        printf("Invalid argument.\n");
+        return 1;
+    }
+
+    char* user_channel;
+    printf("Enter the channel you want to join.\n");
+    scanf("%s", user_channel);
+
+
 
     if(connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
@@ -44,7 +75,9 @@ int main() {
 
     write(sockfd, "NICK Lainbot\n", sizeof("NICK Lainbot\n")-1);
     write(sockfd, "USER Lainbot 8 x : Battlestar\n", sizeof("USER Lainbot 8 x : Battlestar\n")-1);
-    write(sockfd, "JOIN #test\n", sizeof("JOIN #test\n")-1);
+    char join_mess[40];
+    sprintf(join_mess, "JOIN %s\n", user_channel);
+    write(sockfd, join_mess, strlen(join_mess));
 
     while(1)
     {
