@@ -33,15 +33,14 @@ extern YYSTYPE yylval;
 
 <MESSCONTENT>([Ll]eave|[Qq]uit|[Dd]isconnect)/[ ,?;.:/!()\t\n]*        {printf("LEAVE token.\n"); return LEAVE;}
 
-<MESSCONTENT>[cC]ould|[cC]an|[wW]ill|[wW]ould|[mM]ay|[sS]hould|[Nn]eed|[Ww]ant|[Gg]ive|[?]    {printf("Token DEMANDE grepp'd.\n");
+<MESSCONTENT>[cC]ould|[cC]an|[wW]ill|[wW]ould|[mM]ay|[sS]hould|[Nn]eed|[Ww]ant|[Gg]ive|[Nn]ow|[?]    {printf("Token DEMANDE grepp'd.\n");
                         return DEMANDE;}
 
-<MESSCONTENT>[fF]uck|[cC]unt|[bB]rat|[jJ]erk|[fF]ag|[fF]aggot|[mM]oron|[wW]anker|[aA]rsehole|[aA]sshole|[fF]ucker|[sS]crubber|[sS]lag|[kK]nob|[wW]azzock|[tT]wit|[mM]inebag|[mM]aggot    {printf("Token INSULT grepp'd.\n");
-                        return INSULT;}
+<MESSCONTENT>[fF]uck|[cC]unt|[bB]rat|[jJ]erk|[fF]ag|[fF]aggot|[mM]oron|[wW]anker|[aA]rsehole|[aA]sshole|[fF]ucker|[sS]crubber|[sS]lag|[kK]nob|[wW]azzock|[tT]wit|[mM]inebag|[mM]aggot    {char sentence[50]; sprintf(sentence, "Stop insulting people, %s.\n", username); netprint(sentence); }
 
 ^:                      {BEGIN HEADER;}
 
-<HEADER>[a-zA-Z0-9]+/[!]   {username = strdup(yytext);
+<HEADER>[a-zA-Z0-9_-]+/[!]   {username = strdup(yytext);
                                 printf("Name %s GET\n", username);}
 
 <HEADER>([#]+[a-zA-Z]+)/[ ]           {BEGIN MESSCONTENT;

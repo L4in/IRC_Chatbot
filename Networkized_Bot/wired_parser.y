@@ -13,7 +13,7 @@ extern int yylex();
 extern int readInputForLexer(char* buffer,int *numBytesRead,int maxBytesToRead);
 %}
 
-%token NOM DEMANDE GREET DUMP HELP TIME INSULT LEAVE
+%token NOM DEMANDE GREET DUMP HELP TIME LEAVE
 %token NEWLINE
 %%
 
@@ -31,28 +31,33 @@ greetings : GREET NOM
 
 conv_dump : request DUMP
           | DUMP request
+          | NOM DUMP DEMANDE
+          | DEMANDE DUMP NOM
           ;
 
 list_help : request HELP
           | HELP request
+          | NOM HELP DEMANDE
+          | DEMANDE HELP NOM
           ;
 
 date_     : request TIME
           | TIME request
+          | NOM TIME DEMANDE
+          | DEMANDE TIME NOM
           ;
 
 disconnect : request LEAVE
            | LEAVE request
+           | NOM LEAVE DEMANDE
+           | DEMANDE LEAVE NOM
            ;
 
-insulted  : INSULT {printf("\t\tSockfd = %d\n\n", sockfd); send(sockfd, "PRIVMSG #test :Insult recieved.\n", sizeof("PRIVMSG #test :Insult recieved.\n")-1);}
-          ;
 
 statment  : greetings   {reply_greetings();}
           | conv_dump   {printf("\t\tSockfd = %d\n\n", sockfd); send(sockfd, "PRIVMSG #test :Dump request recieved.\n", sizeof("PRIVMSG #test :Dump request recieved.\n")-1); printf("DUMP\n");}
           | list_help   {printf("LIST_HELP\n\n"); list_help();}
           | date_       {send(sockfd, "PRIVMSG #test :Date request recieved.\n", sizeof("PRIVMSG #test :Date request recieved.\n")-1);}
-          |insulted
           |disconnect   {irc_disconnect();}
           |error NEWLINE {yyerrok;}
           ;
