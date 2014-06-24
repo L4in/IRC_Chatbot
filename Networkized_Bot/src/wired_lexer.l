@@ -1,11 +1,13 @@
 %{
 
 #include "../inc/y.tab.h"
+#include "../inc/wired_main.h"
 #include <stdio.h>
 
 extern int sockfd;
 extern char* username;
 extern char* channel;
+extern char* userhost;
 extern YYSTYPE yylval;
 
 //#undef YY_INPUT
@@ -13,7 +15,7 @@ extern YYSTYPE yylval;
 %}
 
 %s HEADER
-%x MESSCONTENT PINGRES
+%x MESSCONTENT PINGRES ROULETTE
 
 %%
 ^PING {printf("PING READ, ATTEMPTING RESPONSE.\n\n"); BEGIN PINGRES;}
@@ -40,13 +42,32 @@ extern YYSTYPE yylval;
 
 <MESSCONTENT>(([Ss]top|[Cc]ease|[Tt]erminate)[ ](([Ss]av(e)?|[Ll]oad|[Mm]onitor|[Rr]egister|[Cc]opy|[Dd]ump)(ing)?)) {return STOPDUMP;}
 
-<MESSCONTENT>[fF]uck|[cC]unt|[bB]rat|[jJ]erk|[fF]ag|[fF]aggot|[mM]oron|[wW]anker|[aA]rsehole|[aA]sshole|[fF]ucker|[sS]crubber|[sS]lag|[kK]nob|[wW]azzock|[tT]wit|[mM]inebag|[mM]aggot    {char sentence[50]; sprintf(sentence, "Stop insulting people, %s.\n", username); netprint(sentence); }
+<MESSCONTENT>[fF]uck|[cC]unt|[bB]rat|[jJ]erk|[fF]ag|[fF]aggot|[mM]oron|[wW]anker|[aA]rsehole|[aA]sshole|[fF]ucker|[sS]crubber|[sS]lag|[kK]nob|[wW]azzock|[tT]wit|[mM]inebag|[mM]aggot    {/*char sentence[50]; sprintf(sentence, "Stop insulting people, %s.\n", username); netprint(sentence);*/ }
+
+<MESSCONTENT>$reload    {load_russian_roulette();}
+
+<MESSCONTENT>$spin      {roll_barrel();}
+
+<MESSCONTENT>$fire      {fire_russian_roulette();}
+
+<MESSCONTENT>$empty     {empty_barrel();}
+
+<MESSCONTENT>$gun/[ ][0-9]+      {BEGIN ROULETTE;}
+
+<ROULETTE>[0-9]+        {weapon_swap(atoi(yytext));
+                        BEGIN MESSCONTENT;}
 
 ^:                      {BEGIN HEADER;}
 
-<HEADER>[a-zA-Z0-9_-]+/[!]   {username = strdup(yytext);}
+<HEADER>[a-zA-Z0-9_-]+/[!]   {username = strdup(yytext);
+                             printf("Got the username : %s\n", username);
+                             }
 
-<HEADER>([#]+[a-zA-Z]+)/[ ]           {BEGIN MESSCONTENT;
+<HEADER>!(~)?[-_a-zA-Z]+@[-.a-zA-Z0-9]+      {userhost = strdup(yytext);
+                                        printf("Got the userhost : %s\n", userhost);
+                                        }
+
+<HEADER>([#]+[-a-zA-Z]+)/[ ]           {BEGIN MESSCONTENT;
                                         channel = strdup(yytext);
                                         }
 
@@ -58,6 +79,8 @@ extern YYSTYPE yylval;
 <HEADER>.                       /*Nuthing*/;
 
 <MESSCONTENT>.                  /*Nuthing too*/;
+
+<MESSCONTENT>$load      
 
 %%
 

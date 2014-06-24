@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <arpa/inet.h>
+#include <pthread.h>
 #include "adressresolver.h"
 
 int main();
@@ -28,6 +29,18 @@ void list_help();
 
 void startDump();
 
-void sopDump();
+void endDump();
+
+void *paused_unban(void * banned_user);
+
+void empty_barrel();
+
+void load_russian_roulette();
+
+void weapon_swap(int desired_number);
+
+void roll_barrel();
+
+void fire_russian_roulette();
 
 #endif

@@ -37,7 +37,7 @@ endif
 
 
 $(BINDIR)$(OUTPUT): $(OBJDIR)wired_main.o $(OBJDIR)adressresolver.o $(OBJDIR)y.tab.o $(OBJDIR)lex.yy.o 
-	$(CC) $(OBJDIR)wired_main.o $(OBJDIR)y.tab.o $(OBJDIR)lex.yy.o $(OBJDIR)adressresolver.o -o $(BINDIR)$(OUTPUT)
+	$(CC) -pthread $(OBJDIR)wired_main.o $(OBJDIR)y.tab.o $(OBJDIR)lex.yy.o $(OBJDIR)adressresolver.o -o $(BINDIR)$(OUTPUT)
 
 $(OBJDIR)wired_main.o: $(SRCDIR)wired_main.c $(INCDIR)adressresolver.h $(INCDIR)wired_main.h
 	$(CC) -c $(SRCDIR)wired_main.c -o $(OBJDIR)wired_main.o 
